@@ -26,8 +26,8 @@ def main():
 
     for page in range(args.start_page, args.end_page):
         url = f'https://tululu.org/l55/{page}/'
-        response = requests.get(url)
         try:
+            response = requests.get(url)
             check_for_redirect(response)
         except requests.HTTPError:
             print('Такой страницы не существует')
