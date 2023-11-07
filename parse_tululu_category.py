@@ -28,17 +28,17 @@ def main():
         url = f'https://tululu.org/l55/{page}/'
         try:
             response = requests.get(url)
+            response.raise_for_status()
             check_for_redirect(response)
+            soup = BeautifulSoup(response.text, 'lxml')
+            for book in soup.select('table.d_book'):
+                url = urllib.parse.urljoin(url, book.find('a')['href'])
+                urls.append(url)
         except requests.HTTPError:
             print('Такой страницы не существует')
         except requests.ConnectionError:
             print('Отсутствует соединение')
             time.sleep(10)
-        response.raise_for_status()
-        soup = BeautifulSoup(response.text, 'lxml')
-        for book in soup.select('table.d_book'):
-            url = urllib.parse.urljoin(url, book.find('a')['href'])
-            urls.append(url)
 
     for url in urls:
         try:
